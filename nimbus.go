@@ -43,6 +43,16 @@ func WithName[I pulumi.Input](name string) Option[I] {
 	}
 }
 
+type Config[I pulumi.Input] interface {
+	Configure(input *I)
+}
+
+func WithConfig[I pulumi.Input](config Config[I]) Option[I] {
+	return func(p *Params[I]) {
+		config.Configure(&p.Input)
+	}
+}
+
 func WithResourceOptions[I pulumi.Input](opts ...pulumi.ResourceOption) Option[I] {
 	return func(p *Params[I]) {
 		p.Options = append(p.Options, opts...)
